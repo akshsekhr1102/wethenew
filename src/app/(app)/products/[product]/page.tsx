@@ -7,10 +7,10 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import prisma from "@/lib/db";
+import prisma from "@/lib/db"; // import your Zustand store
+import { useCartStore } from "@/store/user";
 
 // Define a type for your product data
-
 type ParamsProps = {
   params: {
     product: string;
@@ -24,6 +24,22 @@ export default async function Products({ params }: ParamsProps) {
       slug: params.product,
     },
   });
+
+  // Add to cart function from Zustand store
+  const addToCart = useCartStore((state) => state.addToCart);
+
+  // Handle the Add to Cart action
+  const handleAddToCart = () => {
+    if (productName) {
+      addToCart({
+        id: productName.id,
+        name: productName.name,
+        price: productName.price,
+        image: productName.image as string,
+        quantity: 1,
+      });
+    }
+  };
 
   return (
     <main className="md:mt-10 min-w-screen flex flex-col items-center md:grid grid-cols-2">
@@ -65,9 +81,10 @@ export default async function Products({ params }: ParamsProps) {
             : product.charAt(0).toUpperCase() + product.slice(1)}
         </h1>
         <p>
-          From <span className="text-blue-400">$125</span>
+          From <span className="text-blue-400">${productName?.price}</span>
         </p>
-        <Button>Select your size</Button>
+        {/* Add to Cart Button */}
+        <Button onClick={handleAddToCart}>Add to Cart</Button>
         <Card>
           <CardHeader className="flex flex-row gap-4 items-center">
             <CardTitle className="font-bold">Alma</CardTitle>
@@ -79,9 +96,7 @@ export default async function Products({ params }: ParamsProps) {
         <Accordion type="single" collapsible className="w-full">
           <AccordionItem value="item-1">
             <AccordionTrigger>Is it accessible?</AccordionTrigger>
-            <AccordionContent>
-              Yes. It adheres to the WAI-ARIA design pattern.
-            </AccordionContent>
+            <AccordionContent>{productName?.description}</AccordionContent>
           </AccordionItem>
           <AccordionItem value="item-2">
             <AccordionTrigger>Is it styled?</AccordionTrigger>
