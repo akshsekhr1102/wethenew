@@ -1,5 +1,5 @@
 "use client";
-import { addProduct, printTextAction } from "@/app/actions/admin.action";
+import { addProduct, printTextAction } from "@/actions/admin.action";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,

@@ -7,10 +7,22 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import prisma from "@/lib/db"; // import your Zustand store
-import { useCartStore } from "@/store/user";
+import prisma from "@/lib/db";
+import NotFound from "./not-found";
+import CartControls from "../handle-cart-controls";
 
 // Define a type for your product data
+
+type Product = {
+  id: number;
+  name: string;
+  slug: string;
+  description?: string;
+  price: number;
+  image: string;
+  createdAt: Date;
+};
+
 type ParamsProps = {
   params: {
     product: string;
@@ -24,22 +36,9 @@ export default async function Products({ params }: ParamsProps) {
       slug: params.product,
     },
   });
-
-  // Add to cart function from Zustand store
-  const addToCart = useCartStore((state) => state.addToCart);
-
-  // Handle the Add to Cart action
-  const handleAddToCart = () => {
-    if (productName) {
-      addToCart({
-        id: productName.id,
-        name: productName.name,
-        price: productName.price,
-        image: productName.image as string,
-        quantity: 1,
-      });
-    }
-  };
+  if (!productName) {
+    return <NotFound />;
+  }
 
   return (
     <main className="md:mt-10 min-w-screen flex flex-col items-center md:grid grid-cols-2">
@@ -83,16 +82,7 @@ export default async function Products({ params }: ParamsProps) {
         <p>
           From <span className="text-blue-400">${productName?.price}</span>
         </p>
-        {/* Add to Cart Button */}
-        <Button onClick={handleAddToCart}>Add to Cart</Button>
-        <Card>
-          <CardHeader className="flex flex-row gap-4 items-center">
-            <CardTitle className="font-bold">Alma</CardTitle>
-            <Button>2x</Button>
-            <Button>3x</Button>
-            <Button>4x</Button>
-          </CardHeader>
-        </Card>
+        <CartControls product={productName} />
         <Accordion type="single" collapsible className="w-full">
           <AccordionItem value="item-1">
             <AccordionTrigger>Is it accessible?</AccordionTrigger>

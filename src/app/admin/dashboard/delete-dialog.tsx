@@ -1,5 +1,5 @@
 "use client";
-import { deleteProduct } from "@/app/actions/admin.action";
+import { deleteProduct } from "@/actions/admin.action";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,

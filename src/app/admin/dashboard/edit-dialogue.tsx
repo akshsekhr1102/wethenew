@@ -1,5 +1,5 @@
 "use client"; // Import the edit function
-import { editProduct } from "@/app/actions/admin.action";
+import { editProduct } from "@/actions/admin.action";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";

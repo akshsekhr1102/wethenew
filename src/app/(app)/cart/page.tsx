@@ -1,29 +1,77 @@
-import { useCartStore } from "@/store/user";
+"use client";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { useCartStore } from "@/store/cart-store";
 
-const CartPage = () => {
-  const cart = useCartStore((state) => state.cart);
-  const removeFromCart = useCartStore((state) => state.removeFromCart);
-  const clearCart = useCartStore((state) => state.clearCart);
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 
-  return (
-    <div>
-      <h1>Cart</h1>
-      {cart.length > 0 ? (
-        <>
-          {cart.map((item) => (
-            <div key={item.id}>
-              <p>{item.name}</p>
-              <p>Price: ${item.price}</p>
-              <p>Quantity: {item.quantity}</p>
-            </div>
-          ))}
-          <button onClick={clearCart}>Clear Cart</button>
-        </>
-      ) : (
-        <p>Your cart is empty.</p>
-      )}
-    </div>
-  );
+type CartPageProps = {
+  product: { id: number; name: string; price: number };
+  quantity: number;
 };
 
-export default CartPage;
+export default function CartPage({ product, quantity }: CartPageProps) {
+  const { items, removeFromCart, decreaseQuantity, increaseQuantity } =
+    useCartStore();
+
+  return (
+    <main>
+      <div className="my-4 mx-4">
+        <h1 className="text-2xl">Your Products</h1>
+      </div>
+      <div className="min-h-screen grid place-content-start gap-2   p-4">
+        {items.length === 0 ? (
+          <p>Your cart is empty.</p>
+        ) : (
+          <div className="grid gap-2">
+            {items.map((item) => (
+              <Card
+                id={item.id.toString()}
+                className="flex  justify-start rounded-none border-none"
+              >
+                <CardContent className=" max-w-28  p-0">
+                  <Image
+                    src={item.image}
+                    alt=""
+                    height={150}
+                    width={150}
+                    className=" object-contain   aspect-square bg-gray-100"
+                  />
+                </CardContent>
+                <CardFooter className="flex md:flex-col md:items-start md:gap-2 items-center px-4 py-2">
+                  {" "}
+                  <div>
+                    <h3 className="tracking-tight text-neutral-500 font-medium">
+                      {item.name}
+                    </h3>
+                    <h2 className="text-sm">
+                      Price: ${" "}
+                      <span className="text-blue-900 font-semibold">
+                        {item.price}
+                      </span>
+                    </h2>
+                  </div>
+                  <div className="flex flex-col  gap-2 md:flex-row">
+                    <Button onClick={() => removeFromCart(item.id)}>
+                      Remove
+                    </Button>
+                    <div className="flex items-center gap-4">
+                      <Button onClick={() => increaseQuantity(item.id)}>
+                        +
+                      </Button>
+                      {item.quantity}
+                      <Button onClick={() => decreaseQuantity(item.id)}>
+                        -
+                      </Button>
+                    </div>
+                  </div>
+                </CardFooter>
+              </Card>
+            ))}
+            <Button>Place your Order</Button>
+          </div>
+        )}
+      </div>
+    </main>
+  );
+}
