@@ -5,12 +5,7 @@ import { useCartStore } from "@/store/cart-store";
 
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 
-type CartPageProps = {
-  product: { id: number; name: string; price: number };
-  quantity: number;
-};
-
-export default function CartPage({ product, quantity }: CartPageProps) {
+export default function CartPage() {
   const { items, removeFromCart, decreaseQuantity, increaseQuantity } =
     useCartStore();
 
@@ -26,6 +21,7 @@ export default function CartPage({ product, quantity }: CartPageProps) {
           <div className="grid gap-2">
             {items.map((item) => (
               <Card
+                key={item.id}
                 id={item.id.toString()}
                 className="flex  justify-start rounded-none border-none"
               >

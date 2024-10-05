@@ -1,5 +1,5 @@
 "use client";
-import { addProduct, printTextAction } from "@/actions/admin.action";
+import { addProduct } from "@/actions/admin.action";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -10,27 +10,21 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useFormState } from "react-dom";
 
 export function DialogDemo() {
-  const [state, formAction] = useFormState(printTextAction, {
-    errors: {
-      text: undefined,
-    },
-  });
-
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
 
     const newProducts = {
-      id: Date.now(), // Get the current timestamp as a number
+      id: Date.now(),
       name: formData.get("name") as string,
-      slug: formData.get("name") as string,
-      description: formData.get("description") as string | null, // Make sure description can be null if needed
+      slug: formData.get("slug") as string,
+      description: formData.get("description") as string | null,
       price: +(formData.get("price") as string),
-      image: formData.get("image") as string, // Changed from imageUrl to image
-      createdAt: new Date(), // Set createdAt to the current date
+      image: formData.get("image") as string,
+      createdAt: new Date(),
+      collectionId: null,
     };
 
     console.log(newProducts);
@@ -40,7 +34,7 @@ export function DialogDemo() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="mb-4">Add Products </Button>
+        <Button className="mb-4">Add Products</Button>
       </DialogTrigger>
       <DialogHeader className="bg-white">
         <DialogTitle>Add New Products</DialogTitle>

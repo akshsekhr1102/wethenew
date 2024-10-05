@@ -18,12 +18,12 @@ import {
 import prisma from "@/lib/db";
 import { DialogDemo } from "./dialogue";
 import { EditProductDialog } from "./edit-dialogue";
-import { Button } from "@/components/ui/button";
 import DeleteDialog from "./delete-dialog";
 import Link from "next/link";
 
 export default async function AdminDashboard() {
   const products = await prisma.product.findMany({});
+  const collection = await prisma.collection.findMany({});
 
   return (
     <Card className="w-full">
@@ -55,7 +55,10 @@ export default async function AdminDashboard() {
                 </TableCell>
 
                 <TableCell className="hidden sm:table-cell">
-                  <Badge className="text-xs">pending</Badge>
+                  <Badge className="text-xs">
+                    {collection.find((col) => col.id === e.collectionId)
+                      ?.name || "No Collection"}
+                  </Badge>
                 </TableCell>
                 <TableCell className="hidden sm:table-cell">
                   {e.price}

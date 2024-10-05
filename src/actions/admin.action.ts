@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 
 
 
-export async function printTextAction(previousState: any, formData: FormData) {
+export async function printTextAction(formData: FormData) {
     const text = formData.get("text")
     return {
         errors: {
@@ -33,7 +33,7 @@ export const addProduct = async (formData: Product) => {
     return newProduct;
 };
 
-export const editProduct = async (formData: Omit<Product, "createdAt">) => {
+export const editProduct = async (formData: Omit<Product, "createdAt" | "collectionId">) => {
     const updatedProduct = await prisma.product.update({
         where: { id: formData.id },
         data: {

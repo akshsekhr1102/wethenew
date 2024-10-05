@@ -21,11 +21,21 @@ model User {
 }
 
 model Product {
-  id          Int      @id @default(autoincrement())
-  name        String
-  slug        String   @unique
+  id           Int         @id @default(autoincrement())
+  name         String
+  slug         String      @unique
+  description  String?
+  price        Int
+  image        String
+  createdAt    DateTime    @default(now())
+  collection   Collection? @relation(fields: [collectionId], references: [id])
+  collectionId Int?
+}
+
+model Collection {
+  id          Int       @id @default(autoincrement())
+  name        String    @unique
   description String?
-  price       Int
-  image       String
-  createdAt   DateTime @default(now())
+  createdAt   DateTime  @default(now())
+  products    Product[]
 }

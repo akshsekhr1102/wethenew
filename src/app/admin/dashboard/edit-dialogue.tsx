@@ -23,6 +23,7 @@ export function EditProductDialog({ product }: EditProductDialogProps) {
       description: formData.get("description") as string | null,
       price: +(formData.get("price") as string),
       image: formData.get("image") as string,
+      collection: formData.get("collection") as string,
     };
 
     console.log(updatedProduct);
@@ -70,6 +71,15 @@ export function EditProductDialog({ product }: EditProductDialogProps) {
             <Label htmlFor="image">Image URL</Label>
             <Input
               name="image"
+              type="text"
+              required
+              defaultValue={product.image}
+            />
+          </div>
+          <div>
+            <Label htmlFor="collection">Collection</Label>
+            <Input
+              name="collection"
               type="text"
               required
               defaultValue={product.image}

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input"; // Adjusted import
 import { SearchIcon } from "lucide-react";
 
-export default function SearchProducts({ params, searchParams }: any) {
+export default function SearchProducts() {
   const [searchProduct, setSearchProduct] = useState("");
   const router = useRouter();
 

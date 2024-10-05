@@ -16,11 +16,12 @@ export default function Footer() {
           <div>
             <h4 className="text-lg font-semibold mb-4">About Wethenew</h4>
             <p className="text-sm">
-              Our mission is to give sneaker and streetwear fans, enthusiasts,
-              and the curious the chance to buy their favorite products with
-              complete confidence. Whether you're looking for a limited edition
-              product, the hottest pair at the moment, or the perfect piece of
-              streetwear, you've come to the right place.
+              Our mission is to give sneaker and streetwear fans&apos;
+              enthusiasts &apos; and the curious the chance to buy their
+              favorite products with complete confidence&apos; Whether
+              you&apos;re looking for a limited edition product &apos; the
+              hottest pair at the moment &apos; or the perfect piece of
+              streetwear &apos; you&apos;ve come to the right place &apos;
             </p>
           </div>
 
@@ -95,12 +96,12 @@ export default function Footer() {
             <ul className="space-y-2 text-sm">
               <li>
                 <Link href="#" className="hover:text-gray-900">
-                  Women's Sneakers
+                  Women &apos; s Sneakers
                 </Link>
               </li>
               <li>
                 <Link href="#" className="hover:text-gray-900">
-                  Men's Sneakers
+                  Men &apos; s Sneakers
                 </Link>
               </li>
               <li>

@@ -6,8 +6,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import Link from "next/link";
-import Logo from "../logo";
 
 export default function Herosection() {
   return (

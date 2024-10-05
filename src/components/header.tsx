@@ -1,13 +1,10 @@
+"use client";
 import Link from "next/link";
 import Logo from "./logo";
-import { Input } from "./ui/input";
 import {
-  HamIcon,
   HeartIcon,
   MenuIcon,
   MoveLeft,
-  MoveRight,
-  SearchIcon,
   ShoppingBag,
   UserIcon,
 } from "lucide-react";
@@ -19,14 +16,47 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "./ui/sheet";
-import SearchSpace from "./herosection/searchbar";
 import SearchProducts from "@/app/(app)/search/components/search-products";
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
 
 export default function Header() {
+  const [headerVisible, setHeaderVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+
+  useEffect(() => {
+    // Only run this code on the client side
+    const controlHeader = () => {
+      if (typeof window !== "undefined") {
+        if (window.scrollY > lastScrollY) {
+          setHeaderVisible(false);
+        } else {
+          setHeaderVisible(true);
+        }
+        setLastScrollY(window.scrollY);
+      }
+    };
+
+    window.addEventListener("scroll", controlHeader);
+    return () => {
+      window.removeEventListener("scroll", controlHeader);
+    };
+  }, [lastScrollY]); // Include lastScrollY as a dependency
+
+  const params = useParams();
+
   return (
-    <header className="py-1 px-6 shadow-lg">
+    <header
+      className={`py-1 px-6  md:shadow-lg  fixed w-full transition-transform duration-300 ${
+        headerVisible ? "translate-y-0" : "-translate-y-full"
+      } ${window.scrollY > 20 ? "bg-white" : "bg-transparent"} md:bg-white`}
+    >
       <div className="md:hidden top-0 left-0 right-0 flex justify-between items-center py-3 px-3 z-10 ">
-        <Link href="/">
+        <div className={Object.keys(params).length === 0 ? "" : "hidden"} />
+        <Link
+          className={Object.keys(params).length === 0 ? "hidden" : ""}
+          href="/"
+        >
           <MoveLeft />
         </Link>
         <Logo />
@@ -36,12 +66,12 @@ export default function Header() {
       </div>
 
       {/* MEDIUM HEADER */}
-      <div className="hidden md:flex items-center justify-between py-3 px-6 bg-white">
+      <div className="hidden md:flex items-center justify-between py-3 px-6 ">
         <section className="flex items-center gap-4">
           <Logo />
           <div className="flex gap-4">
-            <Link href="/collections/sneakers">Sneakers</Link>
-            <Link href="/collections/shoes">Shoes</Link>
+            <Link href="/collections/all-sneakers">Sneakers</Link>
+            <Link href="/collections/chaussures">Shoes</Link>
             <Link href="/collections/streetwear">Streetwear</Link>
           </div>
         </section>

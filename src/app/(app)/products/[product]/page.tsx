@@ -1,6 +1,4 @@
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Accordion,
   AccordionContent,
@@ -10,18 +8,6 @@ import {
 import prisma from "@/lib/db";
 import NotFound from "./not-found";
 import CartControls from "../handle-cart-controls";
-
-// Define a type for your product data
-
-type Product = {
-  id: number;
-  name: string;
-  slug: string;
-  description?: string;
-  price: number;
-  image: string;
-  createdAt: Date;
-};
 
 type ParamsProps = {
   params: {

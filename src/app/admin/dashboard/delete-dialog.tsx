@@ -25,13 +25,8 @@ const DeleteDialog: React.FC<DeleteDialogProps> = ({ product }) => {
   const handleDelete = async () => {
     setIsLoading(true);
     setError(null);
-    try {
-      await deleteProduct({ id: product.id });
-    } catch (err) {
-      setError("Failed to delete product. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
+
+    await deleteProduct({ id: product.id });
   };
 
   return (
@@ -51,13 +46,7 @@ const DeleteDialog: React.FC<DeleteDialogProps> = ({ product }) => {
           >
             {isLoading ? "Deleting" : "Confirm"}
           </Button>
-          <Button
-            onClick={() => {
-              DialogClose;
-            }}
-          >
-            Cancel
-          </Button>
+          <Button onClick={DialogClose}>Cancel</Button>
         </div>
       </DialogContent>
     </Dialog>
