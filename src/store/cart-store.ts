@@ -18,13 +18,11 @@ type CartState = {
     decreaseQuantity: (id: number) => void;
 };
 
-
 export const useCartStore = create<CartState>()(
     persist(
         (set) => ({
             items: [],
 
-            //TODO: Add item to the cart
             addToCart: (item) =>
                 set((state) => {
                     const existingItem = state.items.find(
@@ -32,7 +30,6 @@ export const useCartStore = create<CartState>()(
                     );
 
                     if (existingItem) {
-                        //TODO: Update quantity if the item is already in the cart
                         return {
                             items: state.items.map((cartItem) =>
                                 cartItem.id === item.id
@@ -41,20 +38,17 @@ export const useCartStore = create<CartState>()(
                             ),
                         };
                     } else {
-                        //TODO: Add new item to the cart
                         return {
                             items: [...state.items, { ...item, quantity: 1 }],
                         };
                     }
                 }),
 
-            //TODO: Removed item from the cart
             removeFromCart: (id) =>
                 set((state) => ({
                     items: state.items.filter((item) => item.id !== id),
                 })),
 
-            //TODO: Increaseees item quantity in the cart
             increaseQuantity: (id) =>
                 set((state) => ({
                     items: state.items.map((item) =>
@@ -64,16 +58,26 @@ export const useCartStore = create<CartState>()(
                     ),
                 })),
 
-            //TODO: Decrease item quantity in the cartss
             decreaseQuantity: (id) =>
-                set((state) => ({
-                    items: state.items.map((item) =>
-                        item.id === id && item.quantity > 1
-                            ? { ...item, quantity: item.quantity - 1 }
-                            : item
-                    ),
-                })),
-        }),//TODO:Properly aceess the local storage
+                set((state) => {
+                    const itemToDecrease = state.items.find(item => item.id === id);
+
+                    if (itemToDecrease && itemToDecrease.quantity > 1) {
+                        return {
+                            items: state.items.map((item) =>
+                                item.id === id
+                                    ? { ...item, quantity: item.quantity - 1 }
+                                    : item
+                            ),
+                        };
+                    } else {
+                        // Remove item if quantity is less than or equal to 1
+                        return {
+                            items: state.items.filter(item => item.id !== id),
+                        };
+                    }
+                }),
+        }),
         {
             name: "cart-storage",
             storage: createJSONStorage(() => localStorage),

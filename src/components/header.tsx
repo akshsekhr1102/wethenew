@@ -47,7 +47,7 @@ export default function Header() {
 
   return (
     <header
-      className={`py-1 px-6  md:shadow-lg  fixed w-full transition-transform duration-300 ${
+      className={`py-1 px-6  md:shadow-lg z-100 fixed w-full transition-transform duration-300 ${
         headerVisible ? "translate-y-0" : "-translate-y-full"
       } ${window.scrollY > 20 ? "bg-white" : "bg-transparent"} md:bg-white`}
     >
