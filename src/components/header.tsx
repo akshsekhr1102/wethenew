@@ -17,41 +17,42 @@ import {
   SheetTrigger,
 } from "./ui/sheet";
 import SearchProducts from "@/app/(app)/search/components/search-products";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 
 export default function Header() {
   const [headerVisible, setHeaderVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const params = useParams();
+
+  const controlHeader = () => {
+    if (window.scrollY > lastScrollY) {
+      setHeaderVisible(false);
+    } else {
+      setHeaderVisible(true);
+    }
+    setLastScrollY(window.scrollY);
+  };
 
   useEffect(() => {
-    // Only run this code on the client side
-    const controlHeader = () => {
-      if (typeof window !== "undefined") {
-        if (window.scrollY > lastScrollY) {
-          setHeaderVisible(false);
-        } else {
-          setHeaderVisible(true);
-        }
-        setLastScrollY(window.scrollY);
-      }
-    };
-
     window.addEventListener("scroll", controlHeader);
+
     return () => {
       window.removeEventListener("scroll", controlHeader);
     };
-  }, [lastScrollY]); // Include lastScrollY as a dependency
-
-  const params = useParams();
+  }, [lastScrollY]);
 
   return (
     <header
-      className={`py-1 px-6  md:shadow-lg z-100 fixed w-full transition-transform duration-300 ${
+      className={`py-1 px-6 md:shadow-lg z-100 fixed w-full transition-transform duration-300 ${
         headerVisible ? "translate-y-0" : "-translate-y-full"
-      } ${window.scrollY > 20 ? "bg-white" : "bg-transparent"} md:bg-white`}
+      } ${
+        typeof window !== "undefined" && window.scrollY > 20
+          ? "bg-white"
+          : "bg-transparent"
+      } md:bg-white`}
     >
-      <div className="md:hidden top-0 left-0 right-0 flex justify-between items-center py-3 px-3 z-10 ">
+      <div className="md:hidden top-0 left-0 right-0 flex justify-between items-center py-3 px-3 z-10">
         <div className={Object.keys(params).length === 0 ? "" : "hidden"} />
         <Link
           className={Object.keys(params).length === 0 ? "hidden" : ""}
@@ -65,8 +66,7 @@ export default function Header() {
         </Link>
       </div>
 
-      {/* MEDIUM HEADER */}
-      <div className="hidden md:flex items-center justify-between py-3 px-6 ">
+      <div className="hidden md:flex items-center justify-between py-3 px-6">
         <section className="flex items-center gap-4">
           <Logo />
           <div className="flex gap-4">

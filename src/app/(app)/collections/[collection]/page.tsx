@@ -8,7 +8,6 @@ export default async function page({
 }: {
   params: { collection: string };
 }) {
-  // Find the collection based on the collection name from the URL params
   const collection = await prisma.collection.findUnique({
     where: { name: params.collection },
     include: { products: true },
