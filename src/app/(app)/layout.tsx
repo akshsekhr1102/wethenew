@@ -1,4 +1,5 @@
 import Container from "@/components/container";
+import { Toaster } from "@/components/ui/toaster";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -14,6 +15,7 @@ export default function RootLayout({
   return (
     <div className={``}>
       <Container>{children}</Container>
+      <Toaster />
     </div>
   );
 }

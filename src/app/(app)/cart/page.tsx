@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useCartStore } from "@/store/cart-store";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 
+import { useRouter } from "next/navigation";
 export default function CartPage() {
   const { items, removeFromCart, decreaseQuantity, increaseQuantity } =
     useCartStore();
@@ -12,7 +13,7 @@ export default function CartPage() {
     (acc, item) => acc + item.price * item.quantity,
     0
   );
-
+  const router = useRouter();
   return (
     <main>
       <div className="my-4 mx-4">
@@ -73,7 +74,9 @@ export default function CartPage() {
                 ${totalPrice.toFixed(2)}
               </h2>
             </div>
-            <Button className="mt-4">Place your Order</Button>
+            <Button className="mt-4" onClick={() => router.push("/checkout")}>
+              Continue To Billing Information
+            </Button>
           </div>
         )}
       </div>

@@ -1,4 +1,8 @@
 "use client";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
 import { addProduct } from "@/actions/admin.action";
 import { Button } from "@/components/ui/button";
 import {
@@ -8,68 +12,157 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+
+// Define the validation schema using Zod
+const formSchema = z.object({
+  name: z.string().min(2, {
+    message: "Product name must be at least 2 characters.",
+  }),
+  collections: z.string().min(2, {
+    message: "Collections must be at least 2 characters.",
+  }),
+  description: z.string().optional(),
+  price: z.number().positive({
+    message: "Price must be a positive number.",
+  }),
+  image: z.string().url({
+    message: "Image must be a valid URL.",
+  }),
+});
 
 export function DialogDemo() {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      collections: "",
+      description: "",
+      price: 0,
+      image: "",
+    },
+  });
 
-    const newProducts = {
-      id: Date.now(),
-      name: formData.get("name") as string,
-      slug: formData.get("slug") as string,
-      description: formData.get("description") as string | null,
-      price: +(formData.get("price") as string),
-      image: formData.get("image") as string,
-      createdAt: new Date(),
-      collectionId: null,
+  // Handle form submission
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    const productData = {
+      name: values.name,
+      description: values.description || null,
+      price: parseFloat(values.price.toFixed(2)), // Ensure price is properly formatted
+      image: values.image,
+      // Compute the slug here
+      slug: values.name
+        .toLowerCase()
+        .replace(/\s+/g, "-")
+        .replace(/[^a-z0-9-]/g, ""),
     };
 
-    console.log(newProducts);
-    addProduct(newProducts);
-  };
+    // Pass collection name and product data to the server action
+    await addProduct(productData, values.collections);
+  }
 
   return (
     <Dialog>
       <DialogTrigger asChild>
         <Button className="mb-4">Add Products</Button>
       </DialogTrigger>
-      <DialogHeader className="bg-white">
-        <DialogTitle>Add New Products</DialogTitle>
-      </DialogHeader>
-      <DialogContent className="bg-white">
-        <form className="flex flex-col" onSubmit={handleSubmit}>
-          <div>
-            <Label htmlFor="name">Product Name</Label>
-            <Input name="name" type="text" required />
-          </div>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Add New Product</DialogTitle>
+        </DialogHeader>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            {/* Product Name */}
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Product Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter product name" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          <div>
-            <Label htmlFor="slug">Slug</Label>
-            <Input name="slug" type="text" required />
-          </div>
+            {/* Description */}
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Description</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter description" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          <div>
-            <Label htmlFor="description">Description</Label>
-            <Input name="description" type="text" />
-          </div>
+            {/* Price */}
+            <FormField
+              control={form.control}
+              name="price"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Price</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      placeholder="Enter price"
+                      {...field}
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          <div>
-            <Label htmlFor="price">Price</Label>
-            <Input name="price" type="number" required />
-          </div>
+            {/* Image URL */}
+            <FormField
+              control={form.control}
+              name="image"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Image URL</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter image URL" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          <div>
-            <Label htmlFor="image">Image URL</Label>
-            <Input name="image" type="text" required />
-          </div>
-
-          <Button type="submit" className="self-end my-10">
-            Submit
-          </Button>
-        </form>
+            {/* Collections */}
+            <FormField
+              control={form.control}
+              name="collections"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Collections</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter collection name" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            {/* Submit button */}
+            <Button type="submit">Submit</Button>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   );

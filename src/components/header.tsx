@@ -83,7 +83,7 @@ export default function Header() {
         </section>
 
         <section className="flex items-center gap-6 text-gray-600">
-          <Link href="/accounts/profile">
+          <Link href="/accounts/">
             <UserIcon />
           </Link>
           <Link href="/wishlist">

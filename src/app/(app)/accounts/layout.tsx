@@ -1,7 +1,12 @@
-import React from "react";
+"use server";
+
 import Sidebar from "./side-bar";
 
-export default function layout({ children }: { children: React.ReactNode }) {
+export default async function Layout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <div className="flex">
       <Sidebar />
